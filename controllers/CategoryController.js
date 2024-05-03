@@ -1,4 +1,4 @@
-const { Category, Product } = require('../models/index');
+const { Category } = require('../models/index');
 
 
 const CategoryController = {
@@ -15,10 +15,26 @@ const CategoryController = {
         try {
             const categories = await Category.findAll();
             res.send(categories);
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
         }
     },
+    async update(req, res) {
+        try {
+          await Category.update(req.body,
+            {
+              where: {
+                id: req.params.id,
+              },
+            }
+          );
+          res.send("Categoria actualizada con éxito");
+        } catch (err) {
+          console.error(err);
+          res.status(500).send({ msg: 'Error interno del servidor', err });
+        }
+      },
+  
 
 };
 
