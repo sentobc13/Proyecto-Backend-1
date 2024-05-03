@@ -34,8 +34,20 @@ const CategoryController = {
           res.status(500).send({ msg: 'Error interno del servidor', err });
         }
       },
-  
-
-};
+    async delete(req, res) {
+        try {
+            await Category.destroy({
+                where: {
+                    id: req.params.id
+                }
+            })
+            res.send({ message: 'The category has been removed'})
+        }
+         catch (error) {
+            console.error(err);
+            res.status(500).send({ msg: 'Error interno del servidor', err });
+        }
+    }
+}
 
 module.exports = CategoryController;
