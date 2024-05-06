@@ -4,7 +4,7 @@ const ProductController = {
     create: async (req, res) => {
         try {
             const product = await Product.create(req.body);
-            res.status(201).send({ message: 'Producto creado con éxito', product });
+            res.status(201).send({ msg: 'Producto creado con éxito', product });
         } catch (err) {
             console.error(err);
             res.status(500).send('Error interno del servidor');
@@ -32,7 +32,7 @@ const ProductController = {
                     id: req.params.id
                 }
             })
-            res.send({ message: 'El producto ha sido eliminado'})
+            res.send({ msg: 'El producto ha sido eliminado'})
         }
          catch (error) {
             console.error(err);
@@ -42,7 +42,6 @@ const ProductController = {
     async getAll(req, res) {
         try {
           
-          // const products = await Product.findAll();
           const products = await Product.findAll({
             include:[{ model: Category,attributes:["name"], through: { attributes: [] } }]
           });
@@ -51,6 +50,14 @@ const ProductController = {
           console.error(error);
         }
       },
+      async getById(req,res) {
+        try {
+          const product = await Product.findByPk(req.params.id)
+          res.send({msg:'Producto encontrado por su id', product})
+        } catch (error) {
+          console.error(error);
+        }
+      }
     
 };
 
