@@ -1,4 +1,4 @@
-const { Product } = require('../models/index.js');
+const { Product, Category } = require('../models/index.js');
 
 const ProductController = {
     create: async (req, res) => {
@@ -38,7 +38,20 @@ const ProductController = {
             console.error(err);
             res.status(500).send({ msg: 'Error interno del servidor', err });
         }
-    }
+    },
+    async getAll(req, res) {
+        try {
+          
+          // const products = await Product.findAll();
+          const products = await Product.findAll({
+            include:[{ model: Category,attributes:["name"], through: { attributes: [] } }]
+          });
+          res.send(products);
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    
 };
 
 module.exports = ProductController;
