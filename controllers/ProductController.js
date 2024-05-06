@@ -76,6 +76,22 @@ const ProductController = {
             console.error(error);
             res.status(500).send('Error interno del servidor');
         }
+    },
+      async getByPrice(req, res) {
+        try {
+            const products = await Product.findAll({
+                where: {
+                    price: {
+                        [Op.like]: `%${req.params.price}%`
+                    }
+                },
+                include: [{ model: Category,attributes:["name"], through: { attributes: [] } }]
+            });
+            res.send(products);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error interno del servidor');
+        }
     }
 };
 

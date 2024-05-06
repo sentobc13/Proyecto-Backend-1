@@ -1,5 +1,5 @@
-const { Category } = require('../models/index');
-
+const { Category, Product, Sequelize } = require('../models/index');
+const { Op } = Sequelize
 
 const CategoryController = {
     async insert(req, res) {
@@ -57,6 +57,22 @@ const CategoryController = {
         res.status(500).send({ msg: 'Error interno del servidor', err });
       }
     },
+    async getByName(req, res) {
+      try {
+          const categories = await Category.findAll({
+              where: {
+                  name: {
+                      [Op.like]: `%${req.params.name}%`
+                  }
+              },
+              include: [{ model: Product,attributes:["name"], through: { attributes: [] } }]
+          });
+          res.send(categories);
+      } catch (error) {
+          console.error(error);
+          res.status(500).send('Error interno del servidor');
+      }
+  },
 }
 
 module.exports = CategoryController;
