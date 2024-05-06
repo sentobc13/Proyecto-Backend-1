@@ -25,6 +25,20 @@ const ProductController = {
           res.status(500).send({ msg: 'Error interno del servidor', err });
         }
       },
+      async delete(req, res) {
+        try {
+            await Product.destroy({
+                where: {
+                    id: req.params.id
+                }
+            })
+            res.send({ message: 'El producto ha sido eliminado'})
+        }
+         catch (error) {
+            console.error(err);
+            res.status(500).send({ msg: 'Error interno del servidor', err });
+        }
+    }
 };
 
 module.exports = ProductController;

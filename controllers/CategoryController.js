@@ -41,7 +41,7 @@ const CategoryController = {
                     id: req.params.id
                 }
             })
-            res.send({ message: 'The category has been removed'})
+            res.send({ message: 'La categoría se ha eliminado'})
         }
          catch (error) {
             console.error(err);
