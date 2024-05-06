@@ -6,5 +6,6 @@ app.use(express.json())
 
 
 app.use('/categories', require('./routes/categories'));
+app.use('/products',require('./routes/products'));
 
 app.listen(PORT, () => console.log(`Servidor levantado en el puerto ${PORT}`));
