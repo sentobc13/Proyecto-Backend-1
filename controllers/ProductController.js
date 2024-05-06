@@ -1,4 +1,5 @@
-const { Product, Category } = require('../models/index.js');
+const { Product, Category, Sequelize } = require('../models/index.js');
+const { Op } = Sequelize
 
 const ProductController = {
     create: async (req, res) => {
@@ -48,6 +49,7 @@ const ProductController = {
           res.send(products);
         } catch (error) {
           console.error(error);
+          res.status(500).send({ msg: 'Error interno del servidor', err });
         }
       },
       async getById(req,res) {
@@ -56,9 +58,25 @@ const ProductController = {
           res.send({msg:'Producto encontrado por su id', product})
         } catch (error) {
           console.error(error);
+          res.status(500).send({ msg: 'Error interno del servidor', err });
         }
-      }
-    
+      },
+      async getByName(req, res) {
+        try {
+            const products = await Product.findAll({
+                where: {
+                    name: {
+                        [Op.like]: `%${req.params.name}%`
+                    }
+                },
+                include: [{ model: Category,attributes:["name"], through: { attributes: [] } }]
+            });
+            res.send(products);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error interno del servidor');
+        }
+    }
 };
 
 module.exports = ProductController;
