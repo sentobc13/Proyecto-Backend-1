@@ -1,7 +1,8 @@
-const { User, Token } = require('../models/index.js');
+const { User, Token, Sequelize } = require('../models/index.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { jwt_secret } = require('../config/config.json')['development']
+const { jwt_secret } = require('../config/config.json')['development'];
+const { Op } = Sequelize;
 
 
 const UserController = {
@@ -33,16 +34,30 @@ const UserController = {
 
             const token = jwt.sign({ id: user.id }, jwt_secret);
             Token.create({ token, UserId: user.id });
-            res.send({ msg: 'Bienvenid@' + user.name, user, token });
+            res.send({ msg: 'Bienvenid@ ' + user.name, user, token });
 
         } catch (error) {
             console.error(error);
             res.status(500).send('Error interno del servidor');
         }
+    },
+
+    async logout(req, res) {
+        try {
+            await Token.destroy({
+                where: {
+                    [Op.and]: [
+                        { UserId: req.user.id },
+                        { token: req.headers.authorization }
+                    ]
+                }
+            });
+            res.send({ msg: 'Desconectado con éxito' })
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({ msg: 'hubo un problema al tratar de desconectarte' })
+        }
     }
-
-
-
 };
 
 module.exports = UserController;
