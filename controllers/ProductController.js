@@ -8,7 +8,7 @@ const ProductController = {
             res.status(201).send({ msg: 'Producto creado con éxito', product });
         } catch (err) {
             console.error(err);
-            res.status(500).send('Error interno del servidor');
+            res.status(500).send({ msg: 'Error interno del servidor', err });
         }
     },
     async update(req, res) {
@@ -92,7 +92,18 @@ const ProductController = {
             console.error(error);
             res.status(500).send({ msg: 'Error interno del servidor', err });
         }
-    }
+    },
+    async getByPriceDescending(req, res) {
+      try {
+          const products = await Product.findAll({
+              order: [['price', 'DESC']]
+          });
+          res.send(products);
+      } catch (error) {
+          console.error(error);
+          res.status(500).send('Error interno del servidor');
+      }
+  }
 };
 
 module.exports = ProductController;
