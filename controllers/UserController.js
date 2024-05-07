@@ -49,7 +49,8 @@ const UserController = {
                         model: Order,
                         include: [
                             {
-                                model: Product
+                                model: Product,
+                                attributes:["name","price"], through: { attributes: [] } 
                             }
                         ]
                     }
