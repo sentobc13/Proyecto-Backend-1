@@ -1,9 +1,9 @@
-const { Order } = require('../models/index');
+const { Order, Product } = require('../models/index');
 
 const OrderController = {
     async create (req, res) {
         try {
-            console.log("order", req.body);
+            req.body.UserId = req.user.id
             const order = await Order.create(req.body);
             order.addProduct(req.body.ProductId)
             res.status(201).send({ msg: 'Pedido realizado con éxito', order });

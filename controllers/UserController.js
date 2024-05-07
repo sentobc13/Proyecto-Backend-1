@@ -1,4 +1,4 @@
-const { User, Token, Sequelize } = require('../models/index.js');
+const { User, Token, Sequelize, Order, Product } = require('../models/index.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/config.json')['development'];
@@ -41,7 +41,31 @@ const UserController = {
             res.status(500).send('Error interno del servidor');
         }
     },
+    async getUserInfo(req, res) {
+        try {
+            const user = await User.findByPk(req.user.id, {
+                include: [
+                    {
+                        model: Order,
+                        include: [
+                            {
+                                model: Product
+                            }
+                        ]
+                    }
+                ]
+            });
 
+            if (!user) {
+                return res.status(404).send({ message: "Usuario no encontrado" });
+            }
+
+            res.send(user);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error interno del servidor');
+        }
+    },
     async logout(req, res) {
         try {
             await Token.destroy({
