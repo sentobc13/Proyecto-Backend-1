@@ -1,4 +1,5 @@
 ### Proyecto Backend: Tienda Online (E-Commerce) API
+![Captura de pantalla 2024-05-07 175130](https://github.com/sentobc13/Proyecto-Backend-1/assets/160127899/2b766cbc-7e8d-4d48-aba3-fde1d296b84b)
 
 #### Introducción
 En el proyecto de backend se combinará los conocimientos adquiridos en las tecnologías node + express, además de mysql/sequelize.
