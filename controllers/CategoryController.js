@@ -48,6 +48,18 @@ const CategoryController = {
             res.status(500).send({ msg: 'Error interno del servidor', err });
         }
     },
+    async getAll(req, res) {
+      try {
+        
+        const categories = await Category.findAll({
+          include:[{ model: Product,attributes:["name"], through: { attributes: [] } }]
+        });
+        res.send(categories);
+      } catch (error) {
+        console.error(error);
+        res.status(500).send({ msg: 'Error interno del servidor', err });
+      }
+    },
     async getById(req,res) {
       try {
         const category = await Category.findByPk(req.params.id)
