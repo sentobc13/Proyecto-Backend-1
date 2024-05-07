@@ -1,4 +1,4 @@
-const { User } = require('../models/index.js');
+const { User, Token } = require('../models/index.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { jwt_secret } = require('../config/config.json')['development']
@@ -7,12 +7,12 @@ const { jwt_secret } = require('../config/config.json')['development']
 const UserController = {
     async create(req, res) {
         try {
-            const password = bcrypt.hashSync(req.body.password,10)
-            const user = await User.create({...req.body, password, role:"user"});
+            const password = bcrypt.hashSync(req.body.password, 10)
+            const user = await User.create({ ...req.body, password, role: "user" });
             res.status(201).send({ msg: 'Usuario creado con éxito', user });
         } catch (error) {
             console.error(error);
-            res.status(500).send({ msg:'Error interno del servidor',error});
+            res.status(500).send({ msg: 'Error interno del servidor', error });
         }
     },
     async login(req, res) {
@@ -31,12 +31,17 @@ const UserController = {
                 return res.status(400).send({ msg: "Usuario o contraseña incorrectos" });
             }
 
-            res.send(user);
+            const token = jwt.sign({ id: user.id }, jwt_secret);
+            Token.create({ token, UserId: user.id });
+            res.send({ msg: 'Bienvenid@' + user.name, user, token });
+
         } catch (error) {
             console.error(error);
             res.status(500).send('Error interno del servidor');
         }
     }
+
+
 
 };
 
