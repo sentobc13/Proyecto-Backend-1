@@ -1,5 +1,8 @@
 const { User } = require('../models/index.js');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { jwt_secret } = require('../config/config.json')['development']
+
 
 const UserController = {
     async create(req, res) {
